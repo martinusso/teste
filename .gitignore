@@ -3,4 +3,4 @@ target
 *.profdata
 lcov.info
 *.cursorignore
-coverage/**
+coverage

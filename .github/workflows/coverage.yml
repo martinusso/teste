@@ -42,17 +42,14 @@ jobs:
         id: extract
         working-directory: ${{ matrix.crate }}
         run: |
-          if [ ! -f coverage/tarpaulin-report.json ]; then
+          FILE="coverage/tarpaulin-report.json"
+          if [ ! -f "$FILE" ]; then
             echo "coverage=0.0" >> $GITHUB_OUTPUT
           else
-            COUNT=$(jq '[.files[].percent_covered] | length' coverage/tarpaulin-report.json)
-            if [ "$COUNT" -eq 0 ]; then
-              echo "coverage=0.0" >> $GITHUB_OUTPUT
-            else
-              COVERAGE=$(jq '[.files[].percent_covered] | add / length' coverage/tarpaulin-report.json)
-              echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
-            fi
+            COVERAGE=$(jq '[.files[].percent_covered | select(. != null)] | if length > 0 then add / length else 0 end' "$FILE")
+            echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
           fi
+        
 
       - name: Comment coverage on PR
         if: github.event_name == 'pull_request'
