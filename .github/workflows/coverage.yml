@@ -46,10 +46,9 @@ jobs:
           if [ ! -f "$FILE" ]; then
             echo "coverage=0.0" >> $GITHUB_OUTPUT
           else
-            COVERAGE=$(jq '[.files[].percent_covered | select(. != null)] | if length > 0 then add / length else 0 end' "$FILE")
+            COVERAGE=$(jq '.coverage // 0' "$FILE")
             echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
           fi
-        
 
       - name: Comment coverage on PR
         if: github.event_name == 'pull_request'
