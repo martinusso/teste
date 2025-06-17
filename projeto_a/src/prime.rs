@@ -18,10 +18,10 @@ pub fn is_prime_parallel(n: u32) -> bool {
     }
     let mut handles = Vec::new();
     for i in 2..=((n as f64).sqrt() as u32) {
-        handles.push(thread::spawn(move || is_prime(i)));
+        handles.push(thread::spawn(move || n % i == 0));
     }
     for handle in handles {
-        if !handle.join().unwrap() {
+        if handle.join().unwrap() {
             return false;
         }
     }
@@ -38,5 +38,13 @@ mod tests {
         assert_eq!(is_prime(4), false);
         assert_eq!(is_prime(7), true);
         assert_eq!(is_prime(9), false);
+    }
+
+    #[test]
+    fn test_is_prime_parallel() {
+        assert_eq!(is_prime_parallel(2), true);
+        assert_eq!(is_prime_parallel(4), false);
+        assert_eq!(is_prime_parallel(7), true);
+        assert_eq!(is_prime_parallel(9), false);
     }
 }
