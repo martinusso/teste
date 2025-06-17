@@ -1,0 +1,41 @@
+# Compiled files
+/target/
+**/*.rs.bk
+
+# Executables and binaries
+*.exe
+*.exe~
+*.dll
+*.dylib
+*.so
+
+# Test output
+*.log
+
+# Backup files
+*~
+*.swp
+*.swo
+*.tmp
+
+# VS Code settings
+.vscode/
+
+# IntelliJ IDEA / CLion
+.idea/
+*.iml
+
+# Rust/Cargo specific
+Cargo.lock
+
+# By default, include Cargo.lock for binary projects, but ignore for libraries
+# If you’re writing an executable, remove this line above
+
+# Coverage tools
+/coverage/
+*.profraw
+*.profdata
+tarpaulin-report.*
+
+# Other tools
+/.DS_Store
