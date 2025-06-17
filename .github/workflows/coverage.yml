@@ -25,6 +25,10 @@ jobs:
         with:
           rust-version: stable
 
+      - name: Run Tests
+        working-directory: ${{ matrix.crate }}
+        run: cargo test
+
       - name: Install Tarpaulin
         run: cargo install cargo-tarpaulin
 
@@ -38,8 +42,17 @@ jobs:
         id: extract
         working-directory: ${{ matrix.crate }}
         run: |
-          COVERAGE=$(jq '[.files[].percent_covered] | add / length' coverage/tarpaulin-report.json)
-          echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+          if [ ! -f coverage/tarpaulin-report.json ]; then
+            echo "coverage=0.0" >> $GITHUB_OUTPUT
+          else
+            COUNT=$(jq '[.files[].percent_covered] | length' coverage/tarpaulin-report.json)
+            if [ "$COUNT" -eq 0 ]; then
+              echo "coverage=0.0" >> $GITHUB_OUTPUT
+            else
+              COVERAGE=$(jq '[.files[].percent_covered] | add / length' coverage/tarpaulin-report.json)
+              echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+            fi
+          fi
 
       - name: Comment coverage on PR
         if: github.event_name == 'pull_request'
